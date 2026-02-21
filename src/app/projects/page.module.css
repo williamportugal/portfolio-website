@@ -1,0 +1,48 @@
+/* Projects Page Styles */
+
+/* Mobile Projects - visible below 768px */
+.mobileContainer {
+  padding: 2rem 1rem;
+  padding-top: 6rem;
+}
+
+.mobileTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--darkest-blue);
+  margin-bottom: 1.5rem;
+}
+
+.mobileGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Desktop Projects - visible at 768px and above */
+.desktopContainer {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  padding-top: 8rem;
+}
+
+.desktopTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--darkest-blue);
+  margin-bottom: 2rem;
+}
+
+.desktopGrid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Responsive grid for larger desktop */
+@media (min-width: 1024px) {
+  .desktopGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

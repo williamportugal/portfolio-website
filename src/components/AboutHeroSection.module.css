@@ -1,0 +1,755 @@
+/* ============================================================
+   AboutHeroSection.module.css
+
+   State 1     — CSS-driven launch animations
+                 Title slides up (bottom-left), profile fades in (right),
+                 bottom bar slides up from below viewport.
+   State 1→2   — JS-driven scroll animations (phase1: 0 → 0.15)
+                 Bar expands upward, title + profile fade out, arrow fades out,
+                 label shrinks, counter fades in.
+   State 2     — "Growing Up" text section + image enter (1/3)
+   State 2→3   — S2 image scales 1→0.9, S3 image slides in, S3 section slides in,
+                 S2 title → inactive, counter 1/3→2/3 (0.38→0.52)
+   State 3     — Both sections visible; "In High School" is active (2/3)
+   State 3→4   — S2 scales 0.9→0.81, S3 scales 1→0.9, S4 image slides in,
+                 S4 section slides in, S3 title → inactive, counter 2/3→3/3 (0.63→0.78)
+   State 4     — All three sections visible; "Today" is active (3/3)
+                 "My Education" footer slides in from below
+   State 4→5   — Bar slides off top, dark background exposed, S5 elements enter
+   State 5     — Degree card + coursework on dark background
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   Outer scroll container
+   1400 vh = 100 vh visible + 800 vh S1–4 + 500 vh S5.
+───────────────────────────────────────────────────────────── */
+.stickyContainer {
+  height: 1400vh;
+  position: relative;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Desktop
+───────────────────────────────────────────────────────────── */
+.stickyHeroDesktop {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Mobile
+───────────────────────────────────────────────────────────── */
+.stickyHeroMobile {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Hero content area — holds the title
+───────────────────────────────────────────────────────────── */
+.heroContentDesktop {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 8rem 3rem 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* title anchored to bottom-left */
+  pointer-events: none;
+}
+
+.heroContentMobile {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 7rem 2rem 9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Title  "About / Me"
+───────────────────────────────────────────────────────────── */
+.title {
+  font-size: clamp(5rem, 7vw, 6.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.titleEnter {
+  animation: slideUpFade 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 50ms forwards;
+}
+
+.titleExit {
+  animation: slideDownFade 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Profile photo wrapper — right side, vertically centred
+───────────────────────────────────────────────────────────── */
+.profileWrapper {
+  position: absolute;
+  right: 7vw;
+  top: 65%;
+  transform: translateY(-55%); /* slightly above centre */
+  z-index: 2;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.profileEnter {
+  animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 350ms forwards;
+}
+
+/* Circular crop */
+.profileCircle {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bottom bar
+   State 1: thin strip pinned to viewport bottom (natural height).
+   States 2–4: full-screen white canvas (JS grows height to 100vh).
+───────────────────────────────────────────────────────────── */
+.bottomBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform, height;
+  transform: translateY(100%);
+  cursor: pointer;
+}
+
+.bottomBarEnter {
+  animation: slideUpFromBottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 200ms forwards;
+}
+
+.bottomBarExit {
+  animation: slideDownToBottom 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar top row
+   Contains the "My Background" label and the arrow.
+   flex-shrink: 0 keeps it from being squashed by barContentArea.
+───────────────────────────────────────────────────────────── */
+.barTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  flex-shrink: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar label  "My Background"
+───────────────────────────────────────────────────────────── */
+.barLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+  z-index: 10;
+
+}
+
+.barCounter {
+  opacity: 0;
+  font-weight: 400;
+  will-change: opacity;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Arrow icon (chevron-down SVG)
+───────────────────────────────────────────────────────────── */
+.arrowWrapper {
+  display: flex;
+  align-items: center;
+  color: var(--darkest-grey);
+  z-index: 10;
+}
+
+.arrow {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+  animation: bounceDown 1.2s ease-in-out infinite;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Content area — fills bar below the top row.
+   display: none keeps the card content out of the layout
+   entirely during the CSS launch animation so the bar's
+   auto-height is only the barTopRow. JS switches this to flex
+   once scroll starts (progress > 0), exactly like
+   barState2Content in ExperienceHeroSection.
+───────────────────────────────────────────────────────────── */
+.barContentArea {
+  display: none; /* JS: flex once progress > 0 */
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;    /* JS-driven */
+  will-change: opacity;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Card layout — two-column grid
+   Left: accumulating text sections
+   Right: stacking images
+───────────────────────────────────────────────────────────── */
+.cardLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0rem;
+  flex: 1;
+  padding: 1.5rem 2.5rem 2.5rem;
+  min-height: 0;
+  overflow: hidden;
+  align-items: start;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Left column — accumulating text sections
+   All three .textSection divs are in normal flow and stack
+   vertically. Older sections remain visible with their titles
+   morphed to an inactive style by JS.
+───────────────────────────────────────────────────────────── */
+.leftTextColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  height: 100%;
+  padding-top: 20px;
+
+}
+
+/* Each state's text block — starts invisible, JS slides it in */
+.textSection {
+  opacity: 0;
+  will-change: opacity, transform;
+  flex-shrink: 0;
+}
+
+/* Active title style (CSS default) — JS morphs towards inactive */
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  line-height: 1.1;
+  margin: 0 0 0.75rem 0;
+  will-change: font-size, color;
+}
+
+.sectionDesc {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--darkest-grey);
+  line-height: 1.7;
+  margin: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Right column — stacking images
+   position:relative anchors the absolute imageWrapper2/3 children.
+   align-self:flex-start snaps the column top to the grid row top,
+   so stacked images appear at the correct position.
+───────────────────────────────────────────────────────────── */
+.rightImageColumn {
+  position: relative;
+  align-self: flex-start;
+}
+
+/* ── S2 image wrapper — normal flow ─────────────────────────
+   JS scales 1→0.9→0.81 as S3/S4 images stack on top.
+   transform-origin: top keeps the image anchored at its top edge. */
+.imageWrapper1 {
+  width: 100%;
+  transform-origin: top center;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+/* ── S3 image wrapper — slides in on top of S2 ──────────────
+   position:absolute top:0 so it lands exactly over S2.
+   Starts at translateY(100vh) — JS animates upward.
+   Then JS scales 1→0.9 during S3→4. */
+.imageWrapper2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(100vh); /* initial off-screen state — JS overrides */
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+/* ── S4 image wrapper — slides in on top of S3 ──────────────
+   top:10px creates the 10 px stacked-card gap from column top.
+   Starts at translateY(100vh) — JS animates upward. */
+.imageWrapper3 {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(100vh); /* initial off-screen state — JS overrides */
+  transform-origin: top center;
+  will-change: opacity, transform;
+}
+
+.stateImage {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Education footer
+   Direct child of .bottomBar — position:absolute at bar's
+   bottom edge. Independent of .barContentArea so its opacity
+   is unaffected by content-area transitions.
+
+   display:none → flex (JS at progress ≥ 0.82).
+   Slides in from below: translateY(100% → 0%) + opacity fade.
+   As phase2 begins, label morphs + bar slides off top.
+───────────────────────────────────────────────────────────── */
+.educationFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none; /* JS: flex once progress ≥ 0.82 */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  cursor: pointer;
+  /* Initial animation state — off-screen below */
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: opacity, transform;
+}
+
+.educationLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   State 5 content
+   Sits on the dark hero background (z-index:5, below bar:10).
+   All children start opacity:0 in CSS; JS drives them in
+   after the bar has exited off the top.
+   Desktop only — mobile hides this entirely via @media.
+───────────────────────────────────────────────────────────── */
+.state5Content {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 3rem 3rem;
+  overflow: hidden; /* clips S5 elements that start off-screen below */
+  pointer-events: none;
+}
+
+/* ── "My Education" label — matches .s4Label in ExperienceHeroSection ─
+   Plain small grey text; no pill, no border, no background.            */
+.s5Label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #9f9f9f;
+  margin-bottom: 4rem;
+  flex-shrink: 0;
+  opacity: 0; /* JS-driven */
+  will-change: opacity;
+}
+
+/* ── Degree card — white card spanning full content width ───── */
+.s5DegreeCard {
+  background: #ffffff;
+  border-radius: 40px;
+  padding: 1rem 2rem 1rem 2rem;
+  display: flex;
+  align-items: stretch; /* lets logo wrapper anchor its image to the bottom */
+  justify-content: space-between;
+  height: 10rem;
+  margin-bottom: 2rem;
+  flex-shrink: 0;
+  opacity: 0; /* JS-driven */
+  transform: translateY(40px);
+  will-change: opacity, transform;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.15);
+}
+
+.s5DegreeLeft {
+  display: flex;
+  flex-direction: column;
+  margin-right: -15rem;
+
+}
+
+.s5DegreeTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.s5DegreeSubtitle {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--grey-text, #9f9f9f);
+  margin: 0;
+}
+
+/* ── Cal Poly logo wrapper — anchors logo to bottom-right ───── */
+.s5DegreeLogoWrapper {
+  flex-shrink: 0;
+  margin-left: 1.5rem;
+  display: flex;
+  align-items: flex-end;   /* push logo to the bottom of the card */
+  justify-content: flex-end;
+}
+
+.s5CalPolyLogo {
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* ── Two-column layout beneath the degree card ──────────────── */
+.s5TwoColumn {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  flex: 1;
+  min-height: 0;
+  align-items: start;
+}
+
+/* ── Left column: bullet points ─────────────────────────────── */
+.s5Left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* Initial state — JS drives clip-path reveal + opacity + slight translateY */
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(10px);
+  will-change: opacity, clip-path, transform;
+}
+
+.s5BulletList {
+  list-style: disc;
+  padding-left: 3rem;
+  margin: 0;
+  padding-top: 2rem;
+  
+}
+
+.s5BulletItem {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.75rem;
+}
+
+.s5BulletItem:last-child {
+  margin-bottom: 0;
+}
+
+/* ── Right column: coursework label + pill grid ──────────────── */
+.s5Right {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* Initial state — JS drives opacity + translateY */
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.s5CourseLabel {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.07em;
+  align-self: center;
+}
+
+/* 2×5 grid for 10 coursework pills */
+.s5CourseGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* EXACTLY matches .s4SkillPill from ExperienceHeroSection.module.css */
+.s5CoursePill {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 40px;
+  padding: 0.75rem 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile overrides  (≤ 767 px)
+───────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .title {
+    font-size: clamp(3rem, 12vw, 5rem);
+  }
+
+  .profileWrapper {
+    right: 1.5rem;
+    top: 71%;
+    transform: translateY(-60%);
+  }
+
+  .profileCircle {
+    width: 200px;
+    height: 200px;
+  }
+
+  .barTopRow {
+    padding: 1rem 1.5rem;
+  }
+
+  .barLabel {
+    font-size: 1rem;
+  }
+
+  /* Show bar immediately on mobile — no slide-up animation needed */
+  .bottomBar {
+    transform: none;
+  }
+
+  /* Prevent bottomBarEnter from momentarily hiding the bar */
+  .bottomBarEnter {
+    animation: none;
+  }
+
+  /* Single column on mobile: text on top, image below */
+  .cardLayout {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding: 0 1.5rem 1.5rem;
+    overflow-y: auto;
+    align-items: flex-start;
+  }
+
+  .leftTextColumn {
+    overflow-y: visible;
+    height: auto;
+    gap: 0.75rem;
+  }
+
+  .sectionTitle {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  .sectionDesc {
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  /* Image column sits below text on mobile */
+  .rightImageColumn {
+    width: 90%;
+    align-items: center;
+    margin-left: 5%;
+  }
+
+  /* ── White gradient scrim pinned to bar bottom ──────────────
+     ::after on the bar keeps the gradient flush with the bottom
+     edge of the screen at all times (States 2–4). The education
+     footer text/arrow sit above it via z-index.                */
+  .bottomBar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Education footer floats above the gradient scrim */
+  .educationFooter {
+    z-index: 2;
+  }
+
+  /* ── State 5 / Education — mobile layout ────────────────────
+     Show on mobile (was hidden). Reduced padding, single-column
+     layout for s5TwoColumn, smaller typography.                */
+  .state5Content {
+    display: flex;
+    padding: 1.5rem 1.5rem 1.5rem;
+  }
+
+  /* Slightly smaller label text on mobile */
+  .s5Label {
+    font-size: 1rem;
+  }
+
+  /* Degree card: tighter layout on small screens */
+  .s5DegreeCard {
+    padding: 1rem 1rem;
+    margin-bottom: 0rem;
+    border-radius: 20px;
+    height: 8rem;
+  }
+
+  .s5DegreeTitle {
+    font-size: 1rem;
+  }
+
+  .s5DegreeSubtitle {
+    font-size: 0.8rem;
+  }
+
+  .s5CalPolyLogo {
+    height: 38px;
+  }
+
+  /* Single-column on mobile: bullets on top, coursework below */
+  .s5TwoColumn {
+    grid-template-columns: 1fr;
+    gap: 0rem;
+  }
+
+  .s5BulletItem {
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+
+  .s5CoursePill {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.4rem;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive typography — Medium screens (768 px – 1279 px)
+───────────────────────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .title           { font-size: clamp(3.5rem, 7vw, 6.5rem); }
+  .barLabel        { font-size: 1.2rem; }
+  .profileCircle   { width: 260px; height: 260px; }
+  .sectionTitle    { font-size: 1.5rem; }
+  .sectionDesc     { font-size: 0.8rem; line-height: 1.6; }
+
+  /* State 5 adjustments for medium screens */
+  .s5DegreeTitle   { font-size: 1.5rem; }
+  .s5BulletItem    { font-size: 1rem; line-height: 1.6; }
+  .s5CoursePill    { font-size: 0.75rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive typography — Large screens (≥ 1280 px)
+───────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .title         { font-size: clamp(3.5rem, 7vw, 6.5rem); }
+  .barLabel      { font-size: 1.2rem; }
+  .profileCircle { width: 340px; height: 340px; }
+  .sectionTitle    { font-size: 1.8rem; }
+  .sectionDesc     { font-size: 1rem; line-height: 1.6; }
+
+  /* State 5 adjustments for large screens */
+  .s5DegreeTitle   { font-size: 1.75rem; }
+  .s5DegreeSubtitle {font-size: 1rem; }
+  .s5BulletItem    { font-size: 1rem; line-height: 1.6;}
+  .s5CoursePill    { font-size: 1rem; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Keyframes
+───────────────────────────────────────────────────────────── */
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes slideUpFromBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDownToBottom {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

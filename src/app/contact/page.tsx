@@ -1,61 +1,119 @@
-import { Metadata } from "next";
-import Button from "@/components/Button";
+'use client';
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Get in touch with me",
-};
+import { useState } from "react";
+import emailjs from "@emailjs/browser";
+import HomeBackground from "@/components/HomeBackground";
+import PageTransition from "@/components/PageTransition";
+import styles from "./page.module.css";
+
+const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 
 export default function ContactPage() {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-darkest-blue mb-8">Contact</h1>
-      <div className="max-w-lg">
-        <p className="text-grey-text mb-8">
-          Have a question or want to work together? Feel free to reach out!
-        </p>
-        <form className="space-y-6">
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-primary-text mb-2">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="w-full rounded-md border border-clickable px-4 py-2 focus:border-dark-blue focus:outline-none focus:ring-1 focus:ring-dark-blue"
-              placeholder="Your name"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-primary-text mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className="w-full rounded-md border border-clickable px-4 py-2 focus:border-dark-blue focus:outline-none focus:ring-1 focus:ring-dark-blue"
-              placeholder="your@email.com"
-            />
-          </div>
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-primary-text mb-2">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              rows={4}
-              className="w-full rounded-md border border-clickable px-4 py-2 focus:border-dark-blue focus:outline-none focus:ring-1 focus:ring-dark-blue"
-              placeholder="Your message..."
-            />
-          </div>
-          <Button type="submit" variant="primary">
-            Send Message
-          </Button>
-        </form>
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [sendError, setSendError] = useState(false);
+
+  const isFormComplete = name.trim() !== '' && email.trim() !== '' && message.trim() !== '';
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isValidEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+    setSending(true);
+    setSendError(false);
+
+    emailjs.send(
+      process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+      process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+      { from_name: name, from_email: email, message },
+      process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+    )
+      .then(() => {
+        setSuccess(true);
+        setName('');
+        setEmail('');
+        setMessage('');
+      })
+      .catch(() => setSendError(true))
+      .finally(() => setSending(false));
+  };
+
+  const form = success ? (
+    <p className={styles.successMessage}>Message sent! I&apos;ll get back to you soon.</p>
+  ) : (
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        className={styles.input}
+      />
+      <div className={styles.emailWrapper}>
+        <input
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => { setEmail(e.target.value); setEmailError(false); }}
+          className={`${styles.input} ${emailError ? styles.inputError : ''}`}
+        />
+        {emailError && (
+          <span className={styles.errorMessage}>Please enter a valid email address.</span>
+        )}
       </div>
-    </div>
+      <textarea
+        placeholder="Message"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        className={styles.textarea}
+      />
+      {sendError && (
+        <span className={styles.errorMessage}>Something went wrong. Please try again.</span>
+      )}
+      {isFormComplete && (
+        <div className={styles.buttonWrapper}>
+          <button type="submit" className={styles.submitButton} disabled={sending}>
+            {sending ? 'Sending...' : 'Send Message'}
+          </button>
+        </div>
+      )}
+    </form>
+  );
+
+  return (
+    <>
+      {/* Mobile Contact - visible below 768px */}
+      <div className="md:hidden">
+        <section className={styles.section}>
+          <HomeBackground variant="mobile" />
+          <PageTransition>
+            <div className={styles.container}>
+              <h1 className={styles.title}>Get in Touch!</h1>
+              {form}
+            </div>
+          </PageTransition>
+        </section>
+      </div>
+
+      {/* Desktop Contact - visible at 768px and above */}
+      <div className="hidden md:block">
+        <section className={styles.section}>
+          <HomeBackground variant="desktop" />
+          <PageTransition>
+            <div className={styles.container}>
+              <h1 className={styles.title}>Get in Touch!</h1>
+              {form}
+            </div>
+          </PageTransition>
+        </section>
+      </div>
+    </>
   );
 }

@@ -1,0 +1,124 @@
+/* ModuleCarousel Component Styles */
+
+.carouselContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+  z-index: 20;
+}
+
+/* Outer wrapper — provides margins and edge fade */
+.scrollWrapper {
+  position: relative;
+  width: 100%;
+  padding: 0 0px; /* small screens */
+  overflow: hidden;
+}
+
+/* White inner shadow overlays — separate elements for z-index control */
+.fadeLeft,
+.fadeRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.fadeLeft {
+  left: 0;
+  background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.fadeRight {
+  right: 0;
+  background: linear-gradient(to left, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+}
+
+.fadeHidden {
+  opacity: 0;
+}
+
+/* Scroll track — fills the wrapper, free-scrolling */
+.scrollTrack {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Firefox */
+  width: 100%;
+  gap: 0;
+  
+}
+
+.scrollTrack::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Card — single consistent size across all breakpoints */
+.card {
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  width: 400px;
+  height: 600px;
+  
+}
+
+/* Company label above bullet list */
+.companyLabel {
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Dot indicators */
+.indicators {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--dark-grey2, #555);
+  opacity: 0.4;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.dot:hover {
+  opacity: 0.7;
+}
+
+.dotActive {
+  opacity: 1;
+  transform: scale(1.25);
+  background-color: var(--darkest-grey, #222);
+}
+
+/* ===========================
+   Medium (≥768px)
+   =========================== */
+@media (min-width: 768px) {
+  .scrollWrapper {
+    padding: 0 0px;
+    
+  }
+}
+
+/* ===========================
+   Large (≥1280px)
+   =========================== */
+@media (min-width: 1280px) {
+  .scrollWrapper {
+    padding: 0 0px;
+  }
+}

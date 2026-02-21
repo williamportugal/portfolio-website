@@ -1,0 +1,76 @@
+/* SkillsGrid Component Styles */
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 0rem;
+}
+
+/* Individual skill item — white pill */
+.skillItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #FFFFFF;
+  border-radius: 9999px;
+  padding: 2px 2px 2px 28px;
+  min-height: 58px;
+}
+
+.skillLabel {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #000000;
+  white-space: nowrap;
+}
+
+/* Circular arrow button */
+.skillButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 2px solid #000000;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.skillButton:hover {
+  background-color: rgb(35, 0, 81);
+  transform: scale(1.05);
+}
+
+.arrowIcon {
+  width: 30px;
+  height: 30px;
+}
+
+/* ===========================
+   Desktop (≥768px) — 2 columns
+   =========================== */
+@media (min-width: 768px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: auto;
+    padding: 2rem 2rem;
+  }
+}
+
+/* Larger desktop — more gap */
+@media (min-width: 1280px) {
+  .grid {
+    gap: 28px;
+    padding: 2rem 4rem;
+  }
+}

@@ -1,0 +1,113 @@
+/* Header Component Styles */
+/* Unified design for both mobile and desktop */
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+}
+
+.nav {
+  padding: 1rem;
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Centered Pill Navigation with fade animation */
+.pillNav {
+  display: flex;
+  align-items: center;
+  background-color: var(--darkest-grey);
+  border-radius: 9999px;
+  font-size: 1rem;
+  transition: opacity 0.3s ease, transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  size: absolute;
+  padding: 0.25rem;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+.pillNavHidden {
+  opacity: 0;
+  transform: translateY(-20px);
+  pointer-events: none;
+}
+
+/* Light variant — over white background */
+.pillNavLight {
+  background-color: #FFFFFF;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15);
+}
+
+.navLink {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  color: var(--modules);
+  font-weight: 300;
+  transition: background-color 0.2s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  background-color: var(--dark-grey2);
+}
+
+.navLinkActive {
+  background-color: var(--dark-grey1);
+  font-weight: 500;
+}
+
+/* Light variant links — over white background */
+.navLinkLight {
+  color: #000000;
+}
+
+.navLinkLight:hover {
+  background-color: var(--lightest-grey);
+}
+
+.navLinkLight.navLinkActive {
+  background-color: var(--clickable);
+}
+
+.contactButton {
+  position: absolute;
+  right: 1rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--darkest-grey);
+  color: var(--modules);
+  font-size: 1rem;
+  font-weight: 300;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.5);
+}
+
+.contactButton:hover {
+  background-color: var(--dark-grey2);
+}
+
+/* Light variant contact button — over white background */
+.contactButtonLight {
+  background-color: #FFFFFF;
+  color: #000000;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15);
+}
+
+.contactButtonLight:hover {
+  background-color: var(--lightest-grey);
+}
+
+@media (max-width: 767px) {
+  .navContainer {
+  display: flex;
+  align-items: left;
+  justify-content: left;
+}
+}

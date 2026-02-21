@@ -39,25 +39,54 @@ export default function Footer() {
 
   return (
     <footer className="bg-modules border-t border-clickable">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          {/* Copyright */}
-          <p className="text-sm text-grey-text">
-            &copy; {currentYear} William Portugal. All rights reserved.
-          </p>
+      {/* Mobile Footer - visible below 768px */}
+      <div className="md:hidden">
+        <div className="px-4 py-6">
+          <div className="flex flex-col items-center gap-4">
+            {/* Mobile Social Links */}
+            <div className="flex space-x-6">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-grey-text hover:text-dark-blue transition-colors duration-200"
+                  aria-label={link.name}
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
 
-          {/* Social Links */}
-          <div className="flex space-x-6">
-            {socialLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-grey-text hover:text-dark-blue transition-colors duration-200"
-                aria-label={link.name}
-              >
-                {link.icon}
-              </a>
-            ))}
+            {/* Mobile Copyright */}
+            <p className="text-xs text-grey-text text-center">
+              &copy; {currentYear} William Portugal. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Footer - visible at 768px and above */}
+      <div className="hidden md:block">
+        <div className="mx-auto max-w-7xl px-6 py-8">
+          <div className="flex items-center justify-between">
+            {/* Desktop Copyright */}
+            <p className="text-sm text-grey-text">
+              &copy; {currentYear} William Portugal. All rights reserved.
+            </p>
+
+            {/* Desktop Social Links */}
+            <div className="flex space-x-6">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-grey-text hover:text-dark-blue transition-colors duration-200"
+                  aria-label={link.name}
+                >
+                  {link.icon}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,196 @@
+/* Home Page Styles
+ *
+ * Hero styles (name, title, description, background, sticky pin) have been
+ * moved to src/components/HomeHeroSection.module.css
+ *
+ * This file covers everything that appears BELOW the hero:
+ *   — Section header badges
+ *   — White content panels (carousel, workflow)
+ *   — Skills section
+ */
+
+/* ==================== */
+/* Section Header Badge */
+/* ==================== */
+
+.sectionHeader {
+  position: relative;
+  display: block;
+  margin-left: calc(-52vw + 50%);
+  z-index: 200;
+  transform: skewX(-20deg);
+  margin-bottom: 10px;
+}
+
+.sectionHeaderInner {
+  display: inline-block;
+  background-color: var(--section-header-blue);
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 300;
+  padding: 5px 20px 5px 80px;
+  min-width: 200px;
+}
+
+.sectionHeaderText {
+  display: inline-block;
+  transform: skewX(20deg);
+}
+
+/* Right-justified variant */
+.sectionHeaderRight {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: calc(-52vw + 50%);
+  z-index: 200;
+  transform: skewX(-20deg);
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.sectionHeaderRight .sectionHeaderInner {
+  padding: 5px 80px 5px 20px;
+}
+
+/* ==================== */
+/* Mobile Content Panel */
+/* ==================== */
+
+.mobileContentPanel {
+  position: relative;
+  margin-top: 2rem;
+  padding-top: 40px;
+  padding-bottom: 30px;
+  z-index: 1;
+}
+
+.mobileContentPanel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  bottom: 0;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  z-index: -1;
+}
+
+/* ==================== */
+/* Mobile Modules       */
+/* ==================== */
+
+.mobileModulesSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* ==================== */
+/* Mobile Workflow      */
+/* ==================== */
+
+.mobileWorkflowSection {
+  margin-top: 0rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 70px;
+}
+
+/* ======================== */
+/* Desktop Content Panel    */
+/* ======================== */
+
+.desktopContentPanel {
+  position: relative;
+  margin-top: 1rem;
+  padding-top: 50px;
+  padding-bottom: 30px;
+  z-index: 1;
+}
+
+.desktopContentPanel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  bottom: 0;
+  background-color: #FFFFFF;
+  border-radius: 30px;
+  z-index: -1;
+}
+
+/* ==================== */
+/* Desktop Modules      */
+/* ==================== */
+
+.desktopModulesSection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* ==================== */
+/* Desktop Workflow     */
+/* ==================== */
+
+.desktopWorkflowSection {
+  margin-bottom: 70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* ==================== */
+/* Mobile Skills        */
+/* ==================== */
+
+.mobileSkillsSection {
+  width: 100%;
+  position: relative;
+  margin-top: 1rem;
+  padding-bottom: 3rem;
+}
+
+/* ============================= */
+/* Mobile Skills Background Wrap */
+/* ============================= */
+
+/* Provides the positioned containing block for HomeBackground's
+   position:absolute fill, and clips the gradient layers to this area */
+.mobileSkillsBg {
+  position: relative;
+  overflow-x: hidden;
+  padding-top: 2rem;
+}
+
+/* ==================== */
+/* Desktop Skills       */
+/* ==================== */
+
+.desktopSkillsSection {
+  width: 100%;
+  position: relative;
+  margin-top: 1rem;
+  padding-bottom: 4rem;
+}
+
+/* ============================== */
+/* Desktop Skills Background Wrap */
+/* ============================== */
+
+/* Same containing-block pattern as mobile */
+.desktopSkillsBg {
+  position: relative;
+  overflow-x: hidden;
+  padding-top: 2rem;
+}

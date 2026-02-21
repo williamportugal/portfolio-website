@@ -1,0 +1,1035 @@
+/* ============================================================
+   ExperienceHeroSection.module.css
+
+   State 1     — CSS-driven launch animations
+   State 1→2   — JS-driven scroll animations (inline style overrides)
+   State 2     — Two-column card layout (Trust & Will)
+   State 2→3   — JS-driven card swap + Projects footer slide-in
+   State 3     — Two-column card layout (Clavata)
+   State 3→4   — JS-driven bar exit + State 4 reveal
+   State 4     — Senior project on dark background
+   State 4→5   — JS-driven stacked-card + S5 slide-in
+   State 5     — Frontend Software Development on dark background
+   State 5→6   — JS-driven stacked-card + S6 slide-in
+   State 6     — Usability Research and Testing on dark background
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   Outer scroll container
+   1600 vh = 100 vh visible + 1500 vh of scroll range.
+───────────────────────────────────────────────────────────── */
+.stickyContainer {
+  height: 1600vh;
+  position: relative;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Desktop
+───────────────────────────────────────────────────────────── */
+.stickyHeroDesktop {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Mobile
+───────────────────────────────────────────────────────────── */
+.stickyHeroMobile {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Hero content area
+───────────────────────────────────────────────────────────── */
+.heroContentDesktop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 8rem 3rem 12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.heroContentMobile {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding: 7rem 1.5rem 10rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Title  "My / Experience"
+───────────────────────────────────────────────────────────── */
+.title {
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  margin: 0 0 1.75rem 0;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.titleEnter {
+  animation: slideUpFade 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 50ms forwards;
+}
+
+.titleExit {
+  animation: slideDownFade 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Description paragraph
+───────────────────────────────────────────────────────────── */
+.description {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.75;
+  max-width: 620px;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  clip-path: inset(0 100% 0 0);
+  will-change: opacity, transform, clip-path;
+}
+
+.descriptionEnter {
+  animation:
+    slideUpFade     0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 300ms forwards,
+    revealFromLeft  1.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) 300ms forwards;
+}
+
+.descriptionExit {
+  animation: slideDownFade 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bottom bar
+   State 1: thin strip pinned to viewport bottom (natural height).
+   State 2/3: full-screen white panel (JS grows height → 100vh).
+───────────────────────────────────────────────────────────── */
+.bottomBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform, height;
+  transform: translateY(100%);
+  cursor: pointer;
+}
+
+.bottomBarEnter {
+  animation: slideUpFromBottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 200ms forwards;
+}
+
+.bottomBarExit {
+  animation: slideDownToBottom 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar top row
+   Contains the morphing "Internships" label and the arrow.
+───────────────────────────────────────────────────────────── */
+.barTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  flex-shrink: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar label  "Internships"
+───────────────────────────────────────────────────────────── */
+.barLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+}
+
+.barCounter {
+  opacity: 0;
+  will-change: opacity;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Arrow icon (chevron-down SVG)
+───────────────────────────────────────────────────────────── */
+.arrowWrapper {
+  display: flex;
+  align-items: center;
+  color: var(--darkest-grey);
+}
+
+.arrow {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+  animation: bounceDown 1.2s ease-in-out infinite;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   State 2 / 3 content wrapper
+   display:none → flex (JS) once progress > 0.01.
+   The wrapper itself stays opacity:1 once revealed;
+   individual child elements control their own visibility.
+───────────────────────────────────────────────────────────── */
+.barState2Content {
+  display: none; /* JS: flex once progress > 0.01 */
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;    /* JS-driven */
+  will-change: opacity;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Two-column card grid
+   Left  (~40%): company info + skills
+   Right (~60%): black job-details card
+───────────────────────────────────────────────────────────── */
+.state2CardLayout {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  align-items: center; /* vertically center both columns in the available height */
+  gap: 1.25rem;
+  flex: 1;
+  min-height: 0; /* required for flex child to shrink below content height */
+  overflow: hidden;
+  padding: 0 2.5rem 1.5rem;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Left column  (two card slots stacked vertically)
+───────────────────────────────────────────────────────────── */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 10rem;
+  min-height: 90%;
+
+  /* No overflow:hidden here — each slot handles its own clipping */
+}
+
+/* ── Header card slot ──────────────────────────────────────
+   Sized by its normal-flow (S2) child.
+   The S3 card is absolutely overlaid, so it clips here.     */
+.headerCardSlot {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  padding: 10px;
+}
+
+/* ── Skills card slot ──────────────────────────────────────
+   Expands to fill remaining left column height.
+   The S3 skills card is absolutely overlaid inside.         */
+.skillsCardSlot {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+/* ── Card overlay utility ───────────────────────────────────
+   Applied alongside the base card class (.companyHeader /
+   .skillsSection) on S3 cards.
+   Absolutely fills the slot → exact same size as S2 card.
+   Starts invisible + shifted down; JS animates it in.       */
+.cardOverlay {
+  position: absolute !important;
+  inset: 10px !important;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+
+/* ── Company header card ── logo + description ────────────── */
+.companyHeader {
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  /* Scroll-driven initial state (S1→S2 entry) */
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  height: 8rem;
+
+}
+
+.companyLogo {
+  width: 100%;
+  height: auto;
+  max-height: 44px;
+  object-fit: contain;
+  object-position: center;
+}
+
+.companyDescText {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--dark-grey1);
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+.companyUrl {
+  font-weight: 700;
+}
+
+.companyLearnMore {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--grey-text);
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+/* ── Skills section ── "Key Skills Used" label + 2×2 grid ── */
+.skillsSection {
+
+  border-radius: 30px;
+  padding: 0rem 0rem;
+  flex: 1;               /* fills the skillsCardSlot height */
+  display: flex;
+  flex-direction: column;
+  /* Scroll-driven initial state (S1→S2 entry) */
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+  height: auto;
+  align-content: end;
+}
+
+.skillsSectionLabel {
+  font-size: 0.7rem;
+  font-weight: 200;
+  color: var(--grey-text);
+  align-self: center;
+  margin-bottom: 0.0rem;
+  padding-top: 20px;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  flex: 1;
+  align-content: end;
+}
+
+.skillPill {
+  background-color: #ffffff;
+  border-radius: 30px;
+  padding: 3rem 1rem;
+  font-size: 0.75rem;
+  height: 7rem;
+  font-weight: 500;
+  color: var(--dark-grey1);
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Right column  (black job-details card)
+
+   The CARD CONTAINER stays in place throughout States 2 and 3.
+   It handles the S1→2 entry animation (opacity + translateY).
+   During S2→3, the container is static — only the content
+   wrappers inside it change opacity.
+───────────────────────────────────────────────────────────── */
+.rightColumn {
+  border-radius: 30px;
+  position: relative;      /* anchor for absolute content overlay */
+  overflow: hidden;        /* clips the absolute S3 content wrapper */
+  /* Scroll-driven initial state (S1→S2 entry) */
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+  min-height: 90%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  background-color: #151515;
+
+}
+
+/* ── Right card content wrapper (shared base) ────────────── */
+.rightCardContent {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  /* S2 content: normal flow, fills the card via flex */
+  flex: 1;
+    padding: 3rem 2rem;
+
+}
+
+/* ── S3 content overlay ──────────────────────────────────── */
+.rightCardContentOverlay {
+  position: absolute;
+  inset: 0;
+  padding: 3rem 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;              /* JS fades it in during S2→3 */
+  will-change: opacity;
+  /* Reset flex: 1 from base class — absolute el doesn't need it */
+  flex: unset;
+}
+
+/* ── Job details typography ──────────────────────────────── */
+.jobTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 0rem 0;
+  line-height: 1;
+}
+
+.dateRange {
+  font-size: 1rem;
+  color: var(--grey-text);
+  margin: 0 0 1.2rem 0;
+}
+
+.jobSection {
+  margin-bottom: 0.9rem;
+}
+
+.jobSection:last-child {
+  margin-bottom: 0;
+}
+
+.jobSectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--grey-text);
+  margin: 0 0 0.9rem 0;
+}
+
+.bulletList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.bulletItem {
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: #ffffff;
+  margin-bottom: 0.45rem;
+}
+
+.bulletItem:last-child {
+  margin-bottom: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Projects footer
+   Direct child of .bottomBar — position:absolute at bar's
+   bottom edge. Independent of .barState2Content so its opacity
+   is unaffected when barState2Content fades during S3→4.
+
+   display:none → flex (JS at progress ≥ 0.510).
+   Slides in from below: translateY(100% → 0) + opacity fade.
+   Rides with the bar as it slides off the top during S3→4.
+───────────────────────────────────────────────────────────── */
+.projectsFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none; /* JS: flex once progress ≥ 0.510 */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  cursor: pointer;
+  /* Initial animation state — off-screen below */
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: opacity, transform;
+}
+
+.projectsLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   State 4 content
+   Sits on the dark hero background (z-index:5, below bar:10).
+   All children start opacity:0 in CSS; JS drives them in
+   after the bar has exited off the top.
+   Desktop only — mobile hides this entirely.
+───────────────────────────────────────────────────────────── */
+.state4Content {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 3rem 3rem;
+  overflow: hidden; /* clips S4/S5/S6 elements that start off-screen below viewport */
+  pointer-events: none; /* invisible elements should not intercept scroll/clicks */
+}
+
+/* ── "Projects" small label at top-left ────────────────────── */
+.s4Label {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #9F9F9F;
+  margin-bottom: 4rem;
+  flex-shrink: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+
+/* ── Two-column card layout: 1fr left / 1fr right ─────────── */
+.state4CardLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0rem;
+  flex: 1;
+  align-items: center;
+  min-height: 0;
+  /* overflow: hidden removed — S4/S5 elements animate in/out freely;
+     state4Content (parent) provides the viewport clip */
+}
+
+/* ── Left column: title → description → skills ─────────────── */
+.s4LeftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+}
+
+.s4Title {
+  font-size: clamp(2.5rem, 5vw, 2rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.1;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.s4Description {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(10px);
+  will-change: opacity, clip-path, transform;
+  margin-bottom: 4rem;
+}
+
+.s4BulletList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.s4BulletItem {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.5rem;
+}
+
+.s4BulletItem:last-child {
+  margin-bottom: 0;
+}
+
+.s4SkillsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.s4SkillPill {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 40px;
+  padding: 0.6rem 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
+  line-height: 1.3;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ── Right column: project screenshot ──────────────────────── */
+.s4RightColumn {
+  display: flex;
+  position: relative;       /* anchor for s5ImageWrapper (absolute child)      */
+  align-self: flex-start;   /* grid item: snap column box to top of grid row  */
+  align-items: flex-start;  /* flex: image sits at the top of the column       */
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+  max-height: 8rem;
+}
+
+.s4ProjectImage {
+  width: 100%;
+  height: 100%;
+  max-height: 40rem;
+  max-width: 40rem;
+  border-radius: 16px;
+  object-fit: cover;   /* fill the frame; user can switch to contain if preferred */
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   State 4 → 5 → 6 layout helpers
+───────────────────────────────────────────────────────────── */
+
+/* ── Left slot — shared grid cell for S4 + S5 + S6 content ── */
+.s45LeftSlot {
+  position: relative;
+  overflow: visible;  /* allow S5/S6 elements to extend beyond the slot bounds  */
+  align-self: start;  /* override grid's align-items:center — snap to top of row */
+}
+
+/* ── S5 left column — absolute overlay of s4LeftColumn ─────── */
+.s5LeftColumn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: visible; /* allow S5 elements to start off-screen below            */
+}
+
+/* ── S6 left column — absolute overlay of s4LeftColumn ─────── */
+.s6LeftColumn {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: visible; /* allow S6 elements to start off-screen below            */
+}
+
+/* ── S4 image wrapper — scales 100%→90%→81% across S4→5→6 ───
+   transform-origin: top keeps the image anchored at the
+   top edge as it shrinks.                                      */
+.s4ImageWrapper {
+  width: 100%;
+  transform-origin: top;
+  will-change: transform;
+}
+
+/* ── S5 image wrapper — slides up from below during S4→5 ─────
+   Starts at translateY(100vh) so it's completely off-screen;
+   JS animates it upward to translateY(0), then scales 100%→90%
+   during S5→6 (stacked-card effect).
+   transform-origin: top anchors scale to the top edge.         */
+.s5ImageWrapper {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(100vh); /* initial off-screen state — JS overrides */
+  transform-origin: top;
+  will-change: opacity, transform;
+}
+
+/* ── S6 image wrapper — slides up from below during S5→6 ─────
+   Starts at translateY(100vh) so it's completely off-screen;
+   JS animates it upward to translateY(0).
+   top: 30px creates the 30 px stacked-card gap from column top. */
+.s6ImageWrapper {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(100vh); /* initial off-screen state — JS overrides */
+  transform-origin: top;
+  will-change: opacity, transform;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile overrides
+───────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+
+  /* ── State 1 ────────────────────────────────────────────── */
+  .title {
+    font-size: clamp(2.75rem, 10vw, 3.5rem);
+  }
+
+  .description {
+    font-size: 0.9rem;
+    max-width: 100%;
+  }
+
+  /* Show bar immediately on mobile — no slide-up animation needed */
+  .bottomBar {
+    transform: none;
+  }
+
+  /* Prevent bottomBarEnter from momentarily hiding the bar */
+  .bottomBarEnter {
+    animation: none;
+  }
+
+  .barTopRow {
+    padding: 1rem 1.5rem;
+  }
+
+  .barLabel {
+    font-size: 1.05rem;
+  }
+
+  .arrow {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+
+  /* ── States 2 / 3 — single-column layout ────────────────── */
+
+  /* Flip the desktop 2-column grid into a stacked flex column.
+     Order: company header → job-details card → skills          */
+  .state2CardLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+    padding: 0.5rem 1.25rem 1.5rem;
+    overflow-y: auto;        /* scroll if content overflows bar  */
+    align-items: stretch;
+  }
+
+  /* Remove leftColumn as a layout layer so its children become
+     direct flex items of state2CardLayout and can be reordered. */
+  .leftColumn {
+    display: contents;
+  }
+
+  /* 1st: company header card */
+  .headerCardSlot {
+    order: 1;
+  }
+
+  .companyHeader {
+    height: 6rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    margin-bottom: 0rem;
+  }
+
+  .companyDescText {
+    font-size: 0.75rem;
+  }
+
+  /* 2nd: job-details black card */
+  .rightColumn {
+    order: 2;
+    min-height: 55%;   
+    margin-bottom: 0px;    /* remove desktop min-height: 90%  */
+  }
+
+  .rightCardContent {
+    padding: 1.5rem;
+  }
+
+  /* 3rd: skills */
+  .skillsCardSlot {
+    order: 3;
+    flex: none;  
+    gap: 0px;
+  }
+
+  .skillsGrid {
+    gap: 0.5rem;
+  }
+
+  .skillPill {
+    padding: 0.75rem 1rem;
+    height: auto;
+  }
+
+  .skillsSectionLabel{
+    padding-bottom: 10px;
+    padding-top: 0px;
+  }
+
+  .jobTitle {
+  font-size: 1.5rem;
+}
+
+.dateRange {
+  font-size: 0.75rem;
+  color: var(--grey-text);
+  margin: 0 0 0.5rem 0;
+}
+
+.jobSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--grey-text);
+  margin: 0 0 0rem 0;
+}
+
+.bulletList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.bulletItem {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.bulletItem:last-child {
+  margin-bottom: 0;
+}
+  
+
+  /* Skills section: natural height, content aligned to top */
+  .skillsSection {
+    flex: none;
+  }
+
+  .skillsGrid {
+    align-content: start;    /* override desktop align-content: end */
+  }
+
+
+  /* ── States 4 / 5 / 6 — single-column layout ─────────────── */
+
+  /* Show on mobile (was display:none on desktop-only guard).
+     Reduced padding for narrower screens.                       */
+  .state4Content {
+    display: flex;
+    padding: 3rem 1.5rem 1rem;
+  }
+
+  /* Single column: text block on top, image stack below.
+     align-items: stretch fills both items to full column width. */
+  .state4CardLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;    /* override desktop align-items: center */
+  }
+
+
+  .s4Title {
+  font-size: 1.5rem;
+}
+
+.s4Description {
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  transform: translateY(10px);
+  will-change: opacity, clip-path, transform;
+}
+
+.s4BulletList {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.s4BulletItem {
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.5rem;
+}
+
+.s4BulletItem:last-child {
+  margin-bottom: 0;
+}
+
+  /* Left text slot: full width, sits above the image stack */
+  .s45LeftSlot {
+    order: 1;
+    align-self: stretch;     /* override desktop align-self: start  */
+  }
+
+  /* Remove desktop large bottom margin — not needed in a column */
+  .s4Description {
+    margin-bottom: 0;
+  }
+
+  /* Image stack: full width, sits below the text */
+  .s4RightColumn {
+    order: 2;
+    max-height: none; 
+    display: flex;
+    position: relative;    
+    margin-top: 5rem;
+  }
+
+  .s4ProjectImage {
+    width: 90%;
+    height: 100%;
+    justify-self: center;
+  }
+
+.projectsFooter {
+    padding-bottom: 10px;
+  }
+
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Medium screens  (768 px – 1279 px)
+   Copy of the large-screen font sizes. Edit these freely.
+───────────────────────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1279px) {
+
+  /* ── State 1 ─────────────────────────────────────────────── */
+  .title              { font-size: clamp(3.5rem, 7vw, 6.5rem); }
+  .description        { font-size: 1.05rem; }
+
+  /* ── Bar ─────────────────────────────────────────────────── */
+  .barLabel           { font-size: 1.2rem; }
+  .projectsLabel      { font-size: 1.2rem; }
+
+  /* ── States 2 / 3 — company card ────────────────────────── */
+  .companyDescText    { font-size: 0.7rem; }
+  .skillsSectionLabel { font-size: 0.7rem; }
+  .skillPill          { font-size: 0.6rem; 
+  padding-left: 10px; 
+  padding-right: 10px;
+
+  }
+  .jobTitle           { font-size: 1.4rem; }
+  .dateRange          { font-size: 0.75rem; }
+  .jobSectionTitle    { font-size: 1.2rem; }
+  .bulletItem         { font-size: 0.9rem; }
+
+  /* ── States 4 / 5 / 6 — projects ────────────────────────── */
+  .s4Label            { font-size: 1rem; }
+  .s4Title            { font-size: clamp(2.5rem, 5vw, 2rem); }
+  .s4BulletItem       { font-size: 0.9rem; }
+  .s4SkillPill        { font-size: 0.72rem; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Large screens  (1280 px +)
+   Current / default font sizes for all components.
+───────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+
+  /* ── State 1 ─────────────────────────────────────────────── */
+  .title              { font-size: clamp(3.5rem, 7vw, 6.5rem); }
+  .description        { font-size: 1.05rem; }
+
+  /* ── Bar ─────────────────────────────────────────────────── */
+  .barLabel           { font-size: 1.2rem; }
+  .projectsLabel      { font-size: 1.2rem; }
+
+  /* ── States 2 / 3 — company card ────────────────────────── */
+  .companyDescText    { font-size: 0.9rem; }
+  .skillsSectionLabel { font-size: 0.9rem; }
+  .skillPill          { font-size: 0.9rem; }
+  .jobTitle           { font-size: 1.8rem; }
+  .dateRange          { font-size: 1rem; }
+  .jobSectionTitle    { font-size: 1.5rem; }
+  .bulletItem         { font-size: 1.125rem; }
+
+  /* ── States 4 / 5 / 6 — projects ────────────────────────── */
+  .s4Label            { font-size: 1rem; }
+  .s4Title            { font-size: clamp(2.5rem, 5vw, 2rem); }
+  .s4BulletItem       { font-size: 0.9rem; }
+  .s4SkillPill        { font-size: 0.72rem; }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Keyframes
+───────────────────────────────────────────────────────────── */
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes revealFromLeft {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0%   0 0); }
+}
+
+@keyframes slideUpFromBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDownToBottom {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}

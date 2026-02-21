@@ -1,0 +1,155 @@
+/* HomeBackground — dark animated gradient */
+
+.mobileBackground,
+.desktopBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+/* Static dark base */
+.mobileBackground {
+  background: #0B0B0D;
+}
+
+.desktopBackground {
+  background: #0B0B0D;
+}
+
+/* ===========================
+   Top-half gradient layer
+   =========================== */
+.gradientTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(43, 104, 148, 0.5) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 30%, rgba(80, 45, 149, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 30% at 50% 10%, rgba(23, 44, 184, 0.3) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 34% at 80% 70%, rgba(40, 70, 150, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(80, 50, 160, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse 55% 35% at 55% 50%, rgba(50, 90, 180, 0.3) 0%, transparent 55%);
+  background-size: 200% 200%;
+  animation: gradientDriftTop 22s ease-in-out infinite;
+}
+
+
+
+/* ===========================
+   Subtle grain overlay
+   =========================== */
+.grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ===========================
+   Top-half animation keyframes
+   Moves across upper region
+   =========================== */
+@keyframes gradientDriftTop {
+  0% {
+    background-position: 0% 0%;
+  }
+  11% {
+    background-position: 70% 15%;
+  }
+  22% {
+    background-position: 100% 40%;
+  }
+  33% {
+    background-position: 60% 10%;
+  }
+  44% {
+    background-position: 20% 35%;
+  }
+  55% {
+    background-position: 80% 5%;
+  }
+  66% {
+    background-position: 40% 30%;
+  }
+  77% {
+    background-position: 10% 20%;
+  }
+  88% {
+    background-position: 55% 0%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+/* ===========================
+   Bottom-half animation keyframes
+   Moves across lower region
+   =========================== */
+@keyframes gradientDriftBottom {
+  0% {
+    background-position: 100% 100%;
+  }
+  12% {
+    background-position: 30% 70%;
+  }
+  24% {
+    background-position: 0% 90%;
+  }
+  36% {
+    background-position: 70% 60%;
+  }
+  48% {
+    background-position: 100% 80%;
+  }
+  60% {
+    background-position: 20% 100%;
+  }
+  72% {
+    background-position: 60% 65%;
+  }
+  84% {
+    background-position: 85% 95%;
+  }
+  100% {
+    background-position: 100% 100%;
+  }
+}
+
+/* Fade transitions (keep existing behaviour) */
+.fadeFromWhite {
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.fadeToWhite {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

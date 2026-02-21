@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import AboutHeroSection from "@/components/AboutHeroSection";
 
 export const metadata: Metadata = {
   title: "About",
@@ -7,13 +8,16 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-darkest-blue mb-8">About Me</h1>
-      <div className="prose prose-lg max-w-none">
-        <p className="text-grey-text">
-          This is the about page. Add your bio and background information here.
-        </p>
+    <>
+      {/* Mobile About - visible below 768px */}
+      <div className="md:hidden">
+        <AboutHeroSection variant="mobile" />
       </div>
-    </div>
+
+      {/* Desktop About - visible at 768px and above */}
+      <div className="hidden md:block">
+        <AboutHeroSection variant="desktop" />
+      </div>
+    </>
   );
 }

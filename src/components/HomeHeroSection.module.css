@@ -1,0 +1,514 @@
+/* ============================================================
+   HomeHeroSection.module.css
+
+   Mirrors the exact pattern of AboutHeroSection.module.css
+   and ExperienceHeroSection.module.css.
+
+   State 1     — CSS-driven launch animations
+                 Title group slides up (bottom-left), LinkedIn fades in (right),
+                 bottom bar slides up from below viewport.
+   State 1→2   — JS-driven scroll animations (phase1: 0 → 0.15)
+                 Bar expands upward, title + LinkedIn fade out, arrow fades out,
+                 label shrinks + lightens, carousel slides in.
+   State 2     — Module carousel visible; "My Workflow" footer slides in
+   State 2→3   — Bar slides off top, dark background revealed, WorkflowShell enters
+   State 3     — WorkflowShell on dark background
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   Outer scroll container
+   1000 vh = 100 vh visible + 300 vh S1–2 + 600 vh S3.
+───────────────────────────────────────────────────────────── */
+.stickyContainer {
+  height: 1000vh;
+  position: relative;
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Desktop
+───────────────────────────────────────────────────────────── */
+.stickyHeroDesktop {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sticky hero — Mobile
+───────────────────────────────────────────────────────────── */
+.stickyHeroMobile {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Hero content area — holds the title group
+───────────────────────────────────────────────────────────── */
+.heroContentDesktop {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 8rem 3rem 12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* anchored to bottom-left */
+  pointer-events: none;
+}
+
+.heroContentMobile {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 10rem 2rem 14rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Hero title group  ("Hi! I'm" + Name + Job Title)
+───────────────────────────────────────────────────────────── */
+.heroTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  opacity: 0;
+  transform: translateY(40px);
+  will-change: opacity, transform;
+}
+
+.heroTitleEnter {
+  animation: slideUpFade 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 50ms forwards;
+}
+
+.heroTitleExit {
+  animation: slideDownFade 0.35s ease-out forwards;
+}
+
+.hiLabel {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+  padding-left: 0.5rem;
+}
+
+.name {
+  font-size: clamp(5rem, 7vw, 7rem);
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 0.9;
+  margin: 0 0 0rem 0;
+}
+
+.jobTitle {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   LinkedIn button wrapper — right side, vertically positioned
+───────────────────────────────────────────────────────────── */
+.linkedinWrapper {
+  position: absolute;
+  right: 7vw;
+  top: 75%;
+  transform: translateY(-55%);
+  z-index: 1;
+  opacity: 0;
+  will-change: opacity;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.heroBio {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0;
+  text-align: right;
+}
+
+.linkedinEnter {
+  animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 350ms forwards;
+}
+
+.linkedinButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.linkedinButton:hover {
+  transform: scale(1.08);
+  opacity: 0.85;
+}
+
+.linkedinButton img {
+  display: block;
+  border-radius: 15px;
+  width: 5rem;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bottom bar
+   State 1: thin strip pinned to viewport bottom (natural height).
+   States 2–3: full-screen white canvas (JS grows height to 100vh).
+───────────────────────────────────────────────────────────── */
+.bottomBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #ffffff;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: transform, height;
+  transform: translateY(100%);
+  cursor: pointer;
+}
+
+.bottomBarEnter {
+  animation: slideUpFromBottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 200ms forwards;
+}
+
+.bottomBarExit {
+  animation: slideDownToBottom 0.35s ease-out forwards;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar top row
+   Contains the "What I Do" label and the arrow.
+   flex-shrink: 0 keeps it from being squashed by barContentArea.
+───────────────────────────────────────────────────────────── */
+.barTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  flex-shrink: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Bar label  "What I Do"
+───────────────────────────────────────────────────────────── */
+.barLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+  z-index: 10;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Arrow icon (chevron-down SVG)
+───────────────────────────────────────────────────────────── */
+.arrowWrapper {
+  display: flex;
+  align-items: center;
+  color: var(--darkest-grey);
+  z-index: 10;
+}
+
+.arrow {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+  animation: bounceDown 1.2s ease-in-out infinite;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Content area — fills bar below the top row.
+   display: none keeps the carousel out of the layout entirely
+   during the CSS launch animation so the bar's auto-height is
+   only the barTopRow. JS switches this to flex once scroll
+   starts (progress > 0), exactly like barState2Content in
+   ExperienceHeroSection.
+───────────────────────────────────────────────────────────── */
+.barContentArea {
+  display: none; /* JS: flex once progress > 0 */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;    /* JS-driven */
+  will-change: opacity;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Carousel wrapper — starts invisible, JS slides it in
+───────────────────────────────────────────────────────────── */
+.carouselWrapper {
+  opacity: 0;
+  will-change: opacity, transform;
+  width: 100%;
+  padding-left: 1rem;
+  
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Workflow footer
+   Direct child of .bottomBar — position:absolute at bar's
+   bottom edge. Independent of .barContentArea so its opacity
+   is unaffected by content-area transitions.
+
+   display:none → flex (JS at progress ≥ 0.65).
+   Slides in from below: translateY(100% → 0%) + opacity fade.
+───────────────────────────────────────────────────────────── */
+.workflowFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: none; /* JS: flex once progress ≥ 0.65 */
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2.5rem;
+  cursor: pointer;
+  /* Initial animation state — off-screen below */
+  opacity: 0;
+  transform: translateY(100%);
+  will-change: opacity, transform;
+}
+
+.workflowLabel {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--darkest-grey);
+  letter-spacing: -0.01em;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   State 3 content
+   Sits on the dark hero background (z-index:5, below bar:10).
+   All children start opacity:0 in CSS; JS drives them in
+   after the bar has exited off the top.
+───────────────────────────────────────────────────────────── */
+.state3Content {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 3rem 3rem;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* "My Workflow" grey label — pinned top-left, matches .s5Label in AboutHeroSection */
+.s3Label {
+  position: absolute;
+  top: 1.5rem;
+  left: 3rem;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #9f9f9f;
+  opacity: 0; /* JS-driven */
+  will-change: opacity;
+}
+
+/* WorkflowShell wrapper */
+.s3WorkflowWrapper {
+  opacity: 0;
+  transform: translateY(60px);
+  will-change: opacity, transform;
+  pointer-events: all;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Mobile overrides  (≤ 767 px)
+───────────────────────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .name {
+    font-size: clamp(3.5rem, 12vw, 5.5rem);
+  }
+
+  .hiLabel {
+    font-size: 1rem;
+  }
+
+  .hertoTitle{
+  }
+
+  .jobTitle {
+    font-size: 1.1rem;
+    margin-bottom: 0;
+  }
+
+  .linkedinWrapper {
+    right: 1.5rem;
+    top: auto;
+    bottom: calc(4rem + 1rem); /* 4rem = bar height, 1rem = gap above bar */
+    transform: none;
+  }
+
+  .linkedinButton {
+    width: 4rem;
+  }
+
+  .heroBio {
+    font-size: 0.85rem;
+    max-width: 380px;
+    margin-bottom: 0rem;
+  }
+
+  .barTopRow {
+    padding: 1rem 1.5rem;
+  }
+
+  .barLabel {
+    font-size: 1rem;
+  }
+
+  /* Show bar immediately on mobile — no slide-up animation needed */
+  .bottomBar {
+    transform: none;
+  }
+
+  /* Prevent bottomBarEnter from momentarily hiding the bar */
+  .bottomBarEnter {
+    animation: none;
+  }
+
+  /* White gradient scrim pinned to bar bottom */
+  .bottomBar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .workflowFooter {
+    z-index: 2;
+  }
+
+  .state3Content {
+    padding: 1.5rem 1.5rem 1.5rem;
+  }
+
+  .s3Label {
+    font-size: 1rem;
+    left: 1.5rem;
+    top: 1.5rem;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive typography — Medium screens (768 px – 1279 px)
+───────────────────────────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .name     { font-size: clamp(4rem, 8vw, 6.5rem); }
+  .barLabel { font-size: 1.2rem; }
+
+  .linkedinButton{
+    width: 4rem;
+  }
+
+  .linkedinWrapper {
+    top: 75%
+  }
+
+  .heroBio {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+  max-width: 400px;
+  margin: 0;
+  text-align: right;
+}
+
+
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive typography — Large screens (≥ 1280 px)
+───────────────────────────────────────────────────────────── */
+@media (min-width: 1280px) {
+  .name               { font-size: clamp(5rem, 7vw, 7rem); }
+  .barLabel           { font-size: 1.2rem; }
+  .heroContentDesktop { padding: 8rem 4rem 16rem; }
+  .barTopRow          { padding: 1.25rem 4rem; }
+  .workflowFooter     { padding: 1.25rem 4rem; }
+  .state3Content      { padding: 1.5rem 6rem 3rem; }
+  .s3Label            { left: 6rem; }
+
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Keyframes
+───────────────────────────────────────────────────────────── */
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(20px); }
+}
+
+@keyframes slideUpFromBottom {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+@keyframes slideDownToBottom {
+  from { transform: translateY(0); }
+  to   { transform: translateY(100%); }
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(7px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
