@@ -622,13 +622,12 @@ export default function AboutHeroSection({ variant }: AboutHeroSectionProps) {
             <div ref={s5LeftRef} className={styles.s5Left}>
               <ul className={styles.s5BulletList}>
                 <li className={styles.s5BulletItem}>
-                  Conducted market research and generated technical insights across
-                  targeted technology companies
+                  In my fourth year majoring in Liberal Arts Engineering Studies, with a concentration in Computer Science and Graphic Communications. 
                 </li>
                 <li className={styles.s5BulletItem}>
-                  Analyzed content safety practices and use of AI technologies, and
-                  prepared detailed presentations of findings
+                  The Liberal Arts Engineering Studies program is unique to Cal Poly, as students are simultaneously members of the College of Engineering and the College of Liberal Arts.
                 </li>
+
               </ul>
             </div>
 
